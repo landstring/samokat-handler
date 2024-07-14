@@ -1,6 +1,5 @@
 package com.example.samokathandler.DTO.order;
 
-import com.example.samokathandler.DTO.cart.CartDto;
 import com.example.samokathandler.DTO.cart.OrderCartItem;
 import lombok.NoArgsConstructor;
 
