@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RedisHash("CurrentOrder")
+@RedisHash("CurrentOrderHandler")
 @Getter
 @Setter
 public class CurrentOrder implements Serializable {

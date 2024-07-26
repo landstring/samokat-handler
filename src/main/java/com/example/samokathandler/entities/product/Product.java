@@ -27,6 +27,9 @@ public class Product {
     @Column(nullable = false)
     private String image_url;
 
+    @Column(nullable = false)
+    private Long count;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
