@@ -6,15 +6,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PaymentMapper {
-    public Payment fromDto(PaymentDto paymentDto){
-        Payment payment = new Payment();
-        payment.setCard_number(paymentDto.card_number);
-        payment.setExpiration_date(paymentDto.expiration_date);
-        payment.setCvc(paymentDto.cvc);
-        return payment;
+    public Payment fromDto(PaymentDto paymentDto) {
+        return Payment.builder()
+                .card_number(paymentDto.getCard_number())
+                .expiration_date(paymentDto.getExpiration_date())
+                .cvc(paymentDto.getCvc())
+                .build();
     }
 
-    public PaymentDto toDto(Payment payment){
-        return new PaymentDto(payment);
+    public PaymentDto toDto(Payment payment) {
+        return PaymentDto.builder()
+                .id(payment.getId())
+                .card_number(payment.getCard_number())
+                .expiration_date(payment.getExpiration_date())
+                .cvc(payment.getCvc())
+                .build();
     }
 }

@@ -17,13 +17,13 @@ import java.util.Objects;
 public class PaymentWebHook {
 
     private final PaymentService paymentService;
+
     @GetMapping("/check")
     public ResponseEntity<?> check(
             @RequestHeader("Authorization") String token) {
-        if (Objects.equals(token, "PaymentPassword")){
+        if (Objects.equals(token, "PaymentPassword")) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -32,16 +32,14 @@ public class PaymentWebHook {
     public ResponseEntity<?> pay(
             @RequestHeader("Authorization") String token,
             @RequestBody PaymentStatusDto paymentStatusDto) {
-        if (Objects.equals(token, "PaymentPassword")){
-            try{
+        if (Objects.equals(token, "PaymentPassword")) {
+            try {
                 paymentService.updatePaymentStatus(paymentStatusDto);
                 return new ResponseEntity<>(HttpStatus.OK);
-            }
-            catch (WrongPaymentStatusException wrongPaymentStatusException){
+            } catch (WrongPaymentStatusException wrongPaymentStatusException) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }

@@ -1,6 +1,7 @@
 package com.example.samokathandler.redis;
 
 import com.example.samokathandler.DTO.cart.OrderCartItem;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ import java.util.List;
 @RedisHash("CurrentOrderHandler")
 @Getter
 @Setter
+@Builder
 public class CurrentOrder implements Serializable {
     @Id
     private String id;
@@ -21,4 +23,5 @@ public class CurrentOrder implements Serializable {
     private String payment_id;
     private LocalDateTime orderDateTime;
     private String status;
+    private String paymentCode;
 }

@@ -1,6 +1,7 @@
 package com.example.samokathandler.entities.user;
 
 import com.example.samokathandler.DTO.cart.OrderCartItem;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Document
 @Data
+@Builder
 public class Order {
     @Id
     private String id;

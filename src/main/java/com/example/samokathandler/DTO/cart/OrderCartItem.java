@@ -1,14 +1,16 @@
 package com.example.samokathandler.DTO.cart;
 
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
+import java.io.Serializable;
+
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-public class OrderCartItem {
-    public Long product_id;
-    public Integer count;
-
-    public OrderCartItem(Long product_id, Integer count){
-        this.product_id = product_id;
-        this.count = count;
-    }
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class OrderCartItem implements Serializable {
+    Long productId;
+    Integer count;
 }
