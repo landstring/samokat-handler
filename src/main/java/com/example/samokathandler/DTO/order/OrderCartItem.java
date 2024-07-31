@@ -1,4 +1,4 @@
-package com.example.samokathandler.DTO.cart;
+package com.example.samokathandler.DTO.order;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

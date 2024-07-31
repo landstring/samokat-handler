@@ -1,6 +1,6 @@
 package com.example.samokathandler.services;
 
-import com.example.samokathandler.DTO.cart.OrderCartItem;
+import com.example.samokathandler.DTO.order.OrderCartItem;
 import com.example.samokathandler.DTO.order.NewOrderDto;
 import com.example.samokathandler.entities.product.Product;
 import com.example.samokathandler.entities.user.Order;

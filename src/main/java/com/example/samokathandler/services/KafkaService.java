@@ -1,7 +1,9 @@
 package com.example.samokathandler.services;
 
+import com.example.samokathandler.DTO.order.DeliveredOrderDto;
 import com.example.samokathandler.DTO.order.NewOrderDto;
 import com.example.samokathandler.DTO.order.NewStatusDto;
+import com.example.samokathandler.mappers.OrderMapper;
 import com.example.samokathandler.redis.CurrentOrder;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,7 +15,9 @@ import java.util.Objects;
 @Service
 public class KafkaService {
     private final KafkaTemplate<String, NewStatusDto> statusKafkaTemplate;
+    private final KafkaTemplate<String, DeliveredOrderDto> deliveredOrderKafkaTemplate;
     private final CurrentOrderService currentOrderService;
+    private final OrderMapper orderMapper;
 
     public void newOrderHandler(NewOrderDto newOrderDto) {
         boolean successSave = currentOrderService.saveNewOrder(newOrderDto);
@@ -29,7 +33,11 @@ public class KafkaService {
         if (Objects.equals(newStatusDto.getStatus(), "CANCELED")) {
             currentOrderService.cancelOrder(newStatusDto.getOrder_id());
         } else if (Objects.equals(newStatusDto.getStatus(), "PAID")) {
-            CurrentOrder currentOrder = currentOrderService.paidOrder(newStatusDto.getOrder_id());
+            System.out.println("Отправка заказа на доставку");
+//            CurrentOrder currentOrder = currentOrderService.paidOrder(newStatusDto.getOrder_id());
+//            deliveredOrderKafkaTemplate.send(
+//                    "deliveryOrder", orderMapper.currentOrderToDeliveredOrderDto(currentOrder)
+//            );
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.samokathandler.mappers;
 
+import com.example.samokathandler.DTO.order.DeliveredOrderDto;
 import com.example.samokathandler.DTO.order.NewOrderDto;
 import com.example.samokathandler.entities.user.Order;
 import com.example.samokathandler.redis.CurrentOrder;
@@ -32,6 +33,14 @@ public class OrderMapper {
                 .payment_id(newOrderDto.getPayment_id())
                 .orderDateTime(newOrderDto.getOrderDateTime())
                 .status(newOrderDto.getStatus())
+                .build();
+    }
+
+    public DeliveredOrderDto currentOrderToDeliveredOrderDto(CurrentOrder currentOrder){
+        return DeliveredOrderDto.builder()
+                .id(currentOrder.getId())
+                .orderCartItemList(currentOrder.getOrderCartItemList())
+                .address_id(currentOrder.getAddress_id())
                 .build();
     }
 

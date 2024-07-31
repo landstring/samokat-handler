@@ -1,6 +1,6 @@
 package com.example.samokathandler.entities.user;
 
-import com.example.samokathandler.DTO.cart.OrderCartItem;
+import com.example.samokathandler.DTO.order.OrderCartItem;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

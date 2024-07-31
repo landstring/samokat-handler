@@ -1,6 +1,7 @@
 package com.example.samokathandler.configuration;
 
 
+import com.example.samokathandler.DTO.order.DeliveredOrderDto;
 import com.example.samokathandler.DTO.order.NewOrderDto;
 import com.example.samokathandler.DTO.order.NewStatusDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -50,10 +51,22 @@ public class KafkaConfiguration {
     }
 
     @Bean
+    public ProducerFactory<String, DeliveredOrderDto> deliveredOrderProducerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfig());
+    }
+
+    @Bean
     public KafkaTemplate<String, NewStatusDto> statusKafkaTemplate(
             ProducerFactory<String, NewStatusDto> statusProducerFactory
     ) {
         return new KafkaTemplate<>(statusProducerFactory);
+    }
+
+    @Bean
+    public KafkaTemplate<String, DeliveredOrderDto> deliveredOrderKafkaTemplate(
+            ProducerFactory<String, DeliveredOrderDto> deliveredOrderProducerFactory
+    ) {
+        return new KafkaTemplate<>(deliveredOrderProducerFactory);
     }
 
     @Bean

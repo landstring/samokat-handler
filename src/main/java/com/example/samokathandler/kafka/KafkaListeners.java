@@ -2,7 +2,6 @@ package com.example.samokathandler.kafka;
 
 import com.example.samokathandler.DTO.order.NewOrderDto;
 import com.example.samokathandler.DTO.order.NewStatusDto;
-import com.example.samokathandler.services.CurrentOrderService;
 import com.example.samokathandler.services.KafkaService;
 import lombok.AllArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

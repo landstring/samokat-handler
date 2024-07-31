@@ -1,9 +1,11 @@
 package com.example.samokathandler.redis;
 
-import com.example.samokathandler.DTO.cart.OrderCartItem;
+import com.example.samokathandler.DTO.order.OrderCartItem;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -15,13 +17,14 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CurrentOrder implements Serializable {
     @Id
-    private String id;
-    private List<OrderCartItem> orderCartItemList;
-    private String address_id;
-    private String payment_id;
-    private LocalDateTime orderDateTime;
-    private String status;
-    private String paymentCode;
+    String id;
+    List<OrderCartItem> orderCartItemList;
+    String address_id;
+    String payment_id;
+    LocalDateTime orderDateTime;
+    String status;
+    String paymentCode;
 }

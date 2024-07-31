@@ -3,7 +3,6 @@ package com.example.samokathandler.DTO.order;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -11,14 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NewOrderDto {
+public class DeliveredOrderDto {
     String id;
     List<OrderCartItem> orderCartItemList;
-    Long totalPrice;
-    String user_id;
     String address_id;
-    String payment_id;
-    LocalDateTime orderDateTime;
-    String payment_code;
-    String status;
 }
