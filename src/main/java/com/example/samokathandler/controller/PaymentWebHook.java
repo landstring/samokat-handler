@@ -1,14 +1,13 @@
 package com.example.samokathandler.controller;
 
 import com.example.samokathandler.DTO.payment.PaymentStatusDto;
-import com.example.samokathandler.exceptions.payment.WrongPaymentStatusException;
+import com.example.samokathandler.exceptions.order.PaymentNotFoundException;
+import com.example.samokathandler.exceptions.payment.WrongPaymentPasswordException;
 import com.example.samokathandler.services.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @CrossOrigin
 @RestController
@@ -20,27 +19,27 @@ public class PaymentWebHook {
 
     @GetMapping("/check")
     public ResponseEntity<?> check(
-            @RequestHeader("Authorization") String token) {
-        if (Objects.equals(token, "PaymentPassword")) {
+            @RequestHeader("Authorization") String sessionToken) {
+        try {
+            paymentService.checkPassword(sessionToken);
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (WrongPaymentPasswordException exception) {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/pay")
     public ResponseEntity<?> pay(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader("Authorization") String sessionToken,
             @RequestBody PaymentStatusDto paymentStatusDto) {
-        if (Objects.equals(token, "PaymentPassword")) {
-            try {
-                paymentService.updatePaymentStatus(paymentStatusDto);
-                return new ResponseEntity<>(HttpStatus.OK);
-            } catch (WrongPaymentStatusException wrongPaymentStatusException) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        try {
+            paymentService.checkPassword(sessionToken);
+            paymentService.updatePaymentStatus(paymentStatusDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (WrongPaymentPasswordException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (PaymentNotFoundException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

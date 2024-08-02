@@ -1,9 +1,7 @@
-package com.example.samokathandler.redis;
+package com.example.samokathandler.entities.paymentInfo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -14,8 +12,10 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentInfo implements Serializable {
     @Id
-    private String paymentCode;
-    private String orderId;
+    String paymentCode;
+    String orderId;
 }

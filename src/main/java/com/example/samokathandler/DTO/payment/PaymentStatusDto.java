@@ -1,5 +1,7 @@
 package com.example.samokathandler.DTO.payment;
 
+import com.example.samokathandler.enums.PaymentStatusEnum;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,6 +11,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentStatusDto {
-    String payment_code;
-    String status;
+
+    @JsonProperty("payment_code")
+    String paymentCode;
+
+    PaymentStatusEnum status;
 }

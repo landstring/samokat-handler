@@ -1,6 +1,7 @@
-package com.example.samokathandler.redis;
+package com.example.samokathandler.entities.currentOrder;
 
-import com.example.samokathandler.DTO.order.OrderCartItem;
+import com.example.samokathandler.entities.user.OrderCartItem;
+import com.example.samokathandler.enums.CurrentOrderStatus;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,13 +19,13 @@ import java.util.List;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CurrentOrder implements Serializable {
+public class CurrentOrderHandler implements Serializable {
     @Id
     String id;
     List<OrderCartItem> orderCartItemList;
-    String address_id;
-    String payment_id;
+    String addressId;
+    String paymentId;
     LocalDateTime orderDateTime;
-    String status;
     String paymentCode;
+    CurrentOrderStatus status;
 }

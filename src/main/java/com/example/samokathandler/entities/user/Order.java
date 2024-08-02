@@ -1,6 +1,6 @@
 package com.example.samokathandler.entities.user;
 
-import com.example.samokathandler.DTO.order.OrderCartItem;
+import com.example.samokathandler.enums.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -21,9 +21,9 @@ public class Order {
     private Long totalPrice;
     @Indexed
     private String userId;
-    private String address_id;
-    private String payment_id;
+    private String addressId;
+    private String paymentId;
 
     private LocalDateTime orderDateTime;
-    private String status;
+    private OrderStatus status;
 }

@@ -2,9 +2,9 @@ package com.example.samokathandler.exceptions.order;
 
 import com.example.samokathandler.exceptions.SamokatHandlerRuntimeException;
 
-public class PaymentNotFoundException extends SamokatHandlerRuntimeException {
+public class OrderNotFoundException extends SamokatHandlerRuntimeException {
 
-    public PaymentNotFoundException(String message) {
+    public OrderNotFoundException(String message) {
         super(message);
     }
 

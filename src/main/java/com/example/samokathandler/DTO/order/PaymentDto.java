@@ -1,5 +1,6 @@
 package com.example.samokathandler.DTO.order;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,7 +11,12 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentDto {
     String id;
-    String card_number;
-    String expiration_date;
+
+    @JsonProperty("card_number")
+    String cardNumber;
+
+    @JsonProperty("expiration_date")
+    String expirationDate;
+
     Integer cvc;
 }

@@ -13,8 +13,8 @@ public class Payment {
     @Id
     private String id;
 
-    private String card_number;
-    private String expiration_date;
+    private String cardNumber;
+    private String expirationDate;
     private Integer cvc;
     @Indexed
     private String userId;

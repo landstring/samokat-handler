@@ -2,59 +2,45 @@ package com.example.samokathandler.services;
 
 import com.example.samokathandler.DTO.order.NewStatusDto;
 import com.example.samokathandler.DTO.payment.PaymentStatusDto;
-import com.example.samokathandler.exceptions.payment.WrongPaymentStatusException;
-import com.example.samokathandler.redis.PaymentInfo;
-import lombok.AllArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.example.samokathandler.entities.paymentInfo.PaymentInfo;
+import com.example.samokathandler.enums.CurrentOrderStatus;
+import com.example.samokathandler.enums.PaymentStatusEnum;
+import com.example.samokathandler.exceptions.order.PaymentNotFoundException;
+import com.example.samokathandler.exceptions.payment.WrongPaymentPasswordException;
+import com.example.samokathandler.repositories.paymentInfo.PaymentInfoRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PaymentService {
-    private final static String HASH_KEY = "CurrentOrderHandler";
-    private final RedisTemplate<String, Object> redisTemplate;
+    @Value("${payment-password}")
+    private String paymentToken;
+    private final PaymentInfoRepository paymentInfoRepository;
     private final KafkaTemplate<String, NewStatusDto> statusKafkaTemplate;
 
-    public void createPayment(String payment_code, String order_id) {
-        putPaymentInfo(new PaymentInfo(payment_code, order_id));
+    public void checkPassword(String sessionToken) {
+        if (!Objects.equals(sessionToken, paymentToken)) {
+            throw new WrongPaymentPasswordException("Неверный пароль платёжной системы");
+        }
     }
-
-    public void cancelPayment(String payment_code) {
-        deletePaymentInfo(payment_code);
-    }
-
 
     public void updatePaymentStatus(PaymentStatusDto paymentStatusDto) {
-        if (Objects.equals(paymentStatusDto.getStatus(), "Success")) {
-            sendStatus(getPaymentInfo(paymentStatusDto.getPayment_code()).getOrderId(), "PAID");
-        } else if (Objects.equals(paymentStatusDto.getStatus(), "Failure")) {
-            sendStatus(getPaymentInfo(paymentStatusDto.getPayment_code()).getOrderId(), "CANCELED");
-        } else {
-            throw new WrongPaymentStatusException();
-        }
-        deletePaymentInfo(paymentStatusDto.getPayment_code());
-    }
-
-    private void sendStatus(String orderId, String status) {
+        PaymentInfo paymentInfo = paymentInfoRepository.findPaymentInfoById(paymentStatusDto.getPaymentCode())
+                .orElseThrow(() -> new PaymentNotFoundException("Оплата не найдена"));
         NewStatusDto newStatusDto = NewStatusDto.builder()
-                .order_id(orderId)
-                .status(status)
+                .orderId(paymentInfo.getOrderId())
                 .build();
+        if (paymentStatusDto.getStatus() == PaymentStatusEnum.SUCCESS) {
+            newStatusDto.setStatus(CurrentOrderStatus.PAID);
+        } else {
+            newStatusDto.setStatus(CurrentOrderStatus.CANCELED);
+        }
         statusKafkaTemplate.send("newStatus", newStatusDto);
-    }
-
-    private PaymentInfo getPaymentInfo(String payment_code) {
-        return (PaymentInfo) redisTemplate.opsForHash().get(HASH_KEY, payment_code);
-    }
-
-    private void deletePaymentInfo(String payment_code) {
-        redisTemplate.opsForHash().delete(HASH_KEY, payment_code);
-    }
-
-    private void putPaymentInfo(PaymentInfo paymentInfo) {
-        redisTemplate.opsForHash().put(HASH_KEY, paymentInfo.getPaymentCode(), paymentInfo);
+        paymentInfoRepository.delete(paymentStatusDto.getPaymentCode());
     }
 }

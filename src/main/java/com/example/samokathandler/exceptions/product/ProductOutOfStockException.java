@@ -2,9 +2,9 @@ package com.example.samokathandler.exceptions.product;
 
 import com.example.samokathandler.exceptions.SamokatHandlerRuntimeException;
 
-public class ProductNotFoundException extends SamokatHandlerRuntimeException {
+public class ProductOutOfStockException extends SamokatHandlerRuntimeException {
 
-    public ProductNotFoundException(String message) {
+    public ProductOutOfStockException(String message) {
         super(message);
     }
 

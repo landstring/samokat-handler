@@ -1,9 +1,10 @@
 package com.example.samokathandler.mappers;
 
-import com.example.samokathandler.DTO.order.DeliveredOrderDto;
 import com.example.samokathandler.DTO.order.NewOrderDto;
 import com.example.samokathandler.entities.user.Order;
-import com.example.samokathandler.redis.CurrentOrder;
+import com.example.samokathandler.entities.user.OrderCartItem;
+import com.example.samokathandler.enums.OrderStatus;
+import com.example.samokathandler.entities.currentOrder.CurrentOrderHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,36 +12,40 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class OrderMapper {
 
-    public CurrentOrder toCurrentOrderFromNewOrderDto(NewOrderDto newOrderDto) {
-        return CurrentOrder.builder()
+    public CurrentOrderHandler toCurrentOrderFromNewOrderDto(NewOrderDto newOrderDto) {
+        return CurrentOrderHandler.builder()
                 .id(newOrderDto.getId())
-                .orderCartItemList(newOrderDto.getOrderCartItemList())
-                .address_id(newOrderDto.getAddress_id())
-                .payment_id(newOrderDto.getPayment_id())
+                .orderCartItemList(newOrderDto.getOrderCartItemDtoList()
+                        .stream()
+                        .map(orderCartItemDto -> OrderCartItem.builder()
+                                .productId(orderCartItemDto.getProductId())
+                                .count(orderCartItemDto.getCount())
+                                .build())
+                        .toList())
+                .addressId(newOrderDto.getAddressId())
+                .paymentId(newOrderDto.getPaymentId())
                 .orderDateTime(newOrderDto.getOrderDateTime())
                 .status(newOrderDto.getStatus())
-                .paymentCode(newOrderDto.getPayment_code())
+                .paymentCode(newOrderDto.getPaymentCode())
                 .build();
     }
 
     public Order fromNewOrderDto(NewOrderDto newOrderDto) {
         return Order.builder()
                 .id(newOrderDto.getId())
-                .orderCartItemList(newOrderDto.getOrderCartItemList())
+                .orderCartItemList(newOrderDto.getOrderCartItemDtoList()
+                        .stream()
+                        .map(orderCartItemDto -> OrderCartItem.builder()
+                                .productId(orderCartItemDto.getProductId())
+                                .count(orderCartItemDto.getCount())
+                                .build())
+                        .toList())
                 .totalPrice(newOrderDto.getTotalPrice())
-                .userId(newOrderDto.getUser_id())
-                .address_id(newOrderDto.getAddress_id())
-                .payment_id(newOrderDto.getPayment_id())
+                .userId(newOrderDto.getUserId())
+                .addressId(newOrderDto.getAddressId())
+                .paymentId(newOrderDto.getPaymentId())
                 .orderDateTime(newOrderDto.getOrderDateTime())
-                .status(newOrderDto.getStatus())
-                .build();
-    }
-
-    public DeliveredOrderDto currentOrderToDeliveredOrderDto(CurrentOrder currentOrder){
-        return DeliveredOrderDto.builder()
-                .id(currentOrder.getId())
-                .orderCartItemList(currentOrder.getOrderCartItemList())
-                .address_id(currentOrder.getAddress_id())
+                .status(OrderStatus.PROCESSING)
                 .build();
     }
 

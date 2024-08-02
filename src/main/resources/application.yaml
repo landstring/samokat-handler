@@ -26,5 +26,5 @@ spring:
       host: localhost
 server:
   port: 8082
-
+payment-password: PaymentPassword
 

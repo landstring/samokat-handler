@@ -1,5 +1,7 @@
 package com.example.samokathandler.DTO.order;
 
+import com.example.samokathandler.enums.CurrentOrderStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,13 +14,29 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NewOrderDto {
+
     String id;
-    List<OrderCartItem> orderCartItemList;
+
+    @JsonProperty("cart")
+    List<OrderCartItemDto> orderCartItemDtoList;
+
+    @JsonProperty("total_price")
     Long totalPrice;
-    String user_id;
-    String address_id;
-    String payment_id;
+
+    @JsonProperty("user_id")
+    String userId;
+
+    @JsonProperty("address_id")
+    String addressId;
+
+    @JsonProperty("payment_id")
+    String paymentId;
+
+    @JsonProperty("order_date_time")
     LocalDateTime orderDateTime;
-    String payment_code;
-    String status;
+
+    @JsonProperty("payment_code")
+    String paymentCode;
+
+    CurrentOrderStatus status;
 }
