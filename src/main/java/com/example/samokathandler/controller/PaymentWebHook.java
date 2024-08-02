@@ -18,28 +18,18 @@ public class PaymentWebHook {
     private final PaymentService paymentService;
 
     @GetMapping("/check")
-    public ResponseEntity<?> check(
+    @ResponseStatus(HttpStatus.OK)
+    public void check(
             @RequestHeader("Authorization") String sessionToken) {
-        try {
-            paymentService.checkPassword(sessionToken);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (WrongPaymentPasswordException exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        paymentService.checkPassword(sessionToken);
     }
 
     @PostMapping("/pay")
-    public ResponseEntity<?> pay(
+    @ResponseStatus(HttpStatus.OK)
+    public void pay(
             @RequestHeader("Authorization") String sessionToken,
             @RequestBody PaymentStatusDto paymentStatusDto) {
-        try {
-            paymentService.checkPassword(sessionToken);
-            paymentService.updatePaymentStatus(paymentStatusDto);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (WrongPaymentPasswordException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (PaymentNotFoundException exception){
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        paymentService.checkPassword(sessionToken);
+        paymentService.updatePaymentStatus(paymentStatusDto);
     }
 }

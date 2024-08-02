@@ -3,6 +3,8 @@ package com.example.samokathandler.repositories.order;
 import com.example.samokathandler.entities.currentOrder.CurrentOrderHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -28,14 +30,17 @@ public class CurrentOrderHandlerRepository {
         deleteCurrentOrderClient(id);
     }
 
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     private Optional<CurrentOrderHandler> getCurrentOrderClient(String key) {
         return Optional.ofNullable(redisTemplate.opsForHash().get(HASH_KEY, key)).map(object -> (CurrentOrderHandler) object);
     }
 
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     private void putCurrentOrderClient(CurrentOrderHandler currentOrderClient) {
         redisTemplate.opsForHash().put(HASH_KEY, currentOrderClient.getId(), currentOrderClient);
     }
 
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     private void deleteCurrentOrderClient(String key) {
         redisTemplate.opsForHash().delete(HASH_KEY, key);
     }
