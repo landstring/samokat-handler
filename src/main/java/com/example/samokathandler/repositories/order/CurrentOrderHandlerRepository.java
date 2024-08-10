@@ -20,31 +20,34 @@ public class CurrentOrderHandlerRepository {
     private final static String HASH_KEY = "CurrentOrderHandler";
     private final RedisTemplate<String, Object> redisTemplate;
 
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     public Optional<CurrentOrderHandler> findById(String id) {
         return getCurrentOrderClient(id);
     }
 
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     public void save(CurrentOrderHandler currentOrderClient) {
         putCurrentOrderClient(currentOrderClient);
     }
 
+    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
     public void delete(String id) {
         deleteCurrentOrderClient(id);
     }
 
-    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
+
     private Optional<CurrentOrderHandler> getCurrentOrderClient(String key) {
         log.info("Redis выполняет операцию get - HASH_KEY: {}, key: {}", HASH_KEY, key);
         return Optional.ofNullable(redisTemplate.opsForHash().get(HASH_KEY, key)).map(object -> (CurrentOrderHandler) object);
     }
 
-    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
+
     private void putCurrentOrderClient(CurrentOrderHandler currentOrderClient) {
         log.info("Redis выполняет операцию put - HASH_KEY: {}, key: {}", HASH_KEY, currentOrderClient.getId());
         redisTemplate.opsForHash().put(HASH_KEY, currentOrderClient.getId(), currentOrderClient);
     }
 
-    @Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000, multiplier = 2))
+
     private void deleteCurrentOrderClient(String key) {
         log.info("Redis выполняет операцию delete - HASH_KEY: {}, key: {}", HASH_KEY, key);
         redisTemplate.opsForHash().delete(HASH_KEY, key);
